@@ -12,10 +12,7 @@ def main():
 
 '''
 
-
-
 import textwrap
-
 import click
 import requests
 
