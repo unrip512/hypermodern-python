@@ -1,5 +1,5 @@
 # IO-related
-import imageio 
+import imageio.v2 as imageio
 from PIL import Image
 
 # image processing
@@ -9,6 +9,7 @@ import click
 import os
 
 from . import __version__
+
 
 def view(img):
     if img.dtype != np.uint8:
@@ -30,14 +31,13 @@ class Hough_round:
         self.r = r
         self.pattern = self.make_circle_pattern(r)
 
-
     def make_circle_pattern(self, r):
 
         pattern = np.zeros((2 * r + 1, 2 * r + 1))
 
         for i in range((-1) * r, r + 1):
-            for j in range((-1)*r, r + 1):
-                if np.rint(((abs(i))**2 + (abs(j))**2)**0.5) == r:
+            for j in range((-1) * r, r + 1):
+                if np.rint(((abs(i)) ** 2 + (abs(j)) ** 2) ** 0.5) == r:
                     pattern[i + r, j + r] = 1
 
         return pattern
@@ -47,13 +47,16 @@ class Hough_round:
         r = self.r
         height, width = np.shape(arr)
 
-        if (i-r)>=0 and (i+r+1)< height and (j-r)>=0 and (j+r+1)<width:
-            arr[i-r:i+r+1, j-r:j+r+1] += self.pattern
+        if (
+            (i - r) >= 0
+            and (i + r + 1) < height
+            and (j - r) >= 0
+            and (j + r + 1) < width
+        ):
+            arr[i - r : i + r + 1, j - r : j + r + 1] += self.pattern
         return arr
 
     def fit(self, im):
-
-
 
         t_lower = 100
         t_upper = 400
@@ -62,7 +65,6 @@ class Hough_round:
         self.coef_space = np.zeros(np.shape(edge))
         self.image = im
         self.edge = edge
-
 
         height, width = np.shape(edge)
 
@@ -73,7 +75,7 @@ class Hough_round:
 
         min_val = np.min(self.coef_space)
         max_val = np.max(self.coef_space)
-        self.coef_space = (self.coef_space - min_val)/(max_val-min_val)
+        self.coef_space = (self.coef_space - min_val) / (max_val - min_val)
 
         self.res_circle_coord = self.coef_space > 0.8
 
@@ -86,10 +88,16 @@ class Hough_round:
                 if self.res_circle_coord[i, j]:
                     r = self.r
 
-                    if (i-r)>=0 and (i+r+1)< height and (j-r)>=0 and (j+r+1)<width:
+                    if (
+                        (i - r) >= 0
+                        and (i + r + 1) < height
+                        and (j - r) >= 0
+                        and (j + r + 1) < width
+                    ):
 
-                        self.image[i-r:i+r+1, j-r:j+r+1][self.pattern.astype(bool)] = [255, 0, 0]
-
+                        self.image[i - r : i + r + 1, j - r : j + r + 1][
+                            self.pattern.astype(bool)
+                        ] = [255, 0, 0]
 
 
 @click.command()
@@ -104,21 +112,20 @@ def main(args):
     click.echo(f"Search for circles with a radius of {radius} . . .")
     path_to_save = f"./results/{picture_name}"
     os.makedirs(path_to_save, exist_ok=True)
-    
 
-    im1 = imageio.imread(f'images/{picture_name}')
+    im1 = imageio.imread(f"images/{picture_name}")
     hough1 = Hough_round(int(radius))
     hough1.fit(im1)
     hough1.draw_circle()
 
     click.echo("The algorithm has completed.")
 
-    edge_image = view(hough1.edge) 
-    coef_space_image =view(hough1.coef_space)
+    edge_image = view(hough1.edge)
+    coef_space_image = view(hough1.coef_space)
     result_image = view(hough1.image)
 
     edge_image.save(f"{path_to_save}/edges.jpg")
     coef_space_image.save(f"{path_to_save}/coef_space_{radius}.jpg")
     result_image.save(f"{path_to_save}/result_{radius}.jpg")
-    
+
     click.echo(f"Results saved in {path_to_save}")

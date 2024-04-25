@@ -1,7 +1,7 @@
 import nox
 import tempfile
 
-nox.options.sessions = "lint", "safety", "tests"
+nox.options.sessions = "lint", "tests"
 
 
 @nox.session(python=["3.8"])
@@ -46,4 +46,3 @@ def safety(session):
         )
         session.install("safety")
         session.run("safety", "check", f"--file={requirements.name}", "--full-report")
-
