@@ -10,7 +10,7 @@
 2) В терминале перейдите в основную папку и запустите следующюю команду. 
 
 ```
-poetry run hough_circle_transform coins.jpg 60
+poetry run hough_circle_transform <name_of_your_image.jpg> <radius>
 ```
 Первым параметром укажите имя изображения (в примере это ```coins.jpg```), вторым - радиус искомой окружности (в примере - ```80```).
 
