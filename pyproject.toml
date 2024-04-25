@@ -38,7 +38,7 @@ source = ["hypermodern_python"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 50
+fail_under = 100
 
 [build-system]
 requires = ["poetry-core"]
