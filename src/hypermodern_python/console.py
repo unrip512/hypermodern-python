@@ -6,10 +6,9 @@ from PIL import Image
 import numpy as np
 import cv2
 import click
+import os
 
 from . import __version__
-import argparse
-import sys
 
 def view(img):
     if img.dtype != np.uint8:
@@ -95,34 +94,31 @@ class Hough_round:
 
 @click.command()
 @click.version_option(version=__version__)
-def main(args=sys.argv):
-    '''
+@click.argument("args", nargs=2)
+def main(args):
 
-    parser = argparse.ArgumentParser(description='I need full name of the picture.')
-    parser.add_argument("--pn", dest='pn', type=str, help="name of picture in format picture.jpg")
-    name = parser.parse_args().pn
-    click.echo(name)
+    picture_name = args[0]
+    radius = args[1]
 
-    '''
-    for arg in args:
-        click.echo(arg)
+    click.echo(f"Picture {picture_name} has accepted. ")
+    click.echo(f"Search for circles with a radius of {radius} . . .")
+    path_to_save = f"./results/{picture_name}"
+    os.makedirs(path_to_save, exist_ok=True)
+    
 
-
-    im1 = imageio.imread('images/coins.jpg')
-    hough1 = Hough_round(60)
+    im1 = imageio.imread(f'images/{picture_name}')
+    hough1 = Hough_round(int(radius))
     hough1.fit(im1)
     hough1.draw_circle()
 
+    click.echo("The algorithm has completed.")
 
-    edge_image = Image.fromarray(hough1.edge) 
-    coef_space_image = Image.fromarray(np.uint8(hough1.coef_space * 255), 'L')
-    result_image = Image.fromarray(hough1.image)
+    edge_image = view(hough1.edge) 
+    coef_space_image =view(hough1.coef_space)
+    result_image = view(hough1.image)
 
-    edge_image.save("results/edges.jpg")
-    coef_space_image.save("results/coef_space.jpg")
-    result_image.save("results/result.jpg")
+    edge_image.save(f"{path_to_save}/edges.jpg")
+    coef_space_image.save(f"{path_to_save}/coef_space_{radius}.jpg")
+    result_image.save(f"{path_to_save}/result_{radius}.jpg")
     
-    #args = sys.argv[1:]
-
-    click.echo("Hello world!")
-
+    click.echo(f"Results saved in {path_to_save}")
