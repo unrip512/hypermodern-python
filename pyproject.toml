@@ -20,7 +20,7 @@ pillow = "^10.3.0"
 argparse = "^1.4.0"
 
 [tool.poetry.scripts]
-hypermodern-python = "hypermodern_python.console:main"
+hough_circle_transform = "hypermodern_python.console:main"
 
 
 [tool.poetry.group.dev.dependencies]
