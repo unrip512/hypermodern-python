@@ -1,3 +1,5 @@
+"""The algorithm of Haugh transmission for circles."""
+
 # IO-related
 import imageio.v2 as imageio
 from PIL import Image
@@ -11,13 +13,15 @@ import os
 from . import __version__
 
 
-def view(img):
+def view(img: np.ndarray) -> Image.Image:
+    """Convert an array to an Image type image."""
     if img.dtype != np.uint8:
         img = (img * 255).astype(np.uint8)
     return Image.fromarray(img)
 
 
 class Hough_round:
+    """Contain all the attributes and functions for implementing the Hough algorithm."""
 
     image = None
     edge = None
@@ -26,13 +30,28 @@ class Hough_round:
     coef_space = None
     res_circle_coord = None
 
-    def __init__(self, r):
+    def __init__(self: "Hough_round", r: int) -> None:
+        """Initialize an object of the class. Defines the radius of the desired circles.
 
+        Args:
+            r: the radius of the circles that we are looking for in the image.
+        """
         self.r = r
         self.pattern = self.make_circle_pattern(r)
 
-    def make_circle_pattern(self, r):
+    def make_circle_pattern(self: "Hough_round", r: int) -> np.ndarray:
+        """Create a circle template.
 
+        Creates a two-dimensional array of 0 and 1,
+        in which a circle is drawn using the numbers 1.
+
+        Args:
+            r: the radius of the circle in pixels.
+
+        Returns:
+            A two-dimensional np.ndarray array of size r*r.
+
+        """
         pattern = np.zeros((2 * r + 1, 2 * r + 1))
 
         for i in range((-1) * r, r + 1):
@@ -42,8 +61,18 @@ class Hough_round:
 
         return pattern
 
-    def make_circle(self, arr, i, j):
+    def make_circle(self: "Hough_round", arr: np.ndarray, i: int, j: int) -> np.ndarray:
+        """Draw a singe circle centered at a point (i,j) on the image arr.
 
+        Args:
+            arr: a twoyfh
+            i: the coordinate of the center of the circle (axis = 0).
+            j: the coordinate of the center of the circle (axis = 1).
+
+        Returns:
+            A two-dimensional array is an image of the coefficient space
+            with a drawn circle.
+        """
         r = self.r
         height, width = np.shape(arr)
 
@@ -56,8 +85,12 @@ class Hough_round:
             arr[i - r : i + r + 1, j - r : j + r + 1] += self.pattern
         return arr
 
-    def fit(self, im):
+    def fit(self: "Hough_round", im: np.ndarray) -> None:
+        """Сreates an image of the coefficient space using the original image.
 
+        Args:
+            im: image in the np.ndarray format
+        """
         t_lower = 100
         t_upper = 400
         edge = cv2.Canny(im, t_lower, t_upper)
@@ -79,8 +112,12 @@ class Hough_round:
 
         self.res_circle_coord = self.coef_space > 0.8
 
-    def draw_circle(self):
+    def draw_circle(self: "Hough_round") -> None:
+        """Draw a red circle on the image.
 
+        Applies the circle pattern obtained in function "make_circle_pattern"
+        to the image and turns the pixel red at the points of the circle.
+        """
         height, width = np.shape(self.coef_space)
 
         for i in range(height):
@@ -103,26 +140,26 @@ class Hough_round:
 @click.command()
 @click.version_option(version=__version__)
 @click.argument("args", nargs=2)
-def main(args):
-
-    picture_name = args[0]
-    radius = args[1]
+def main(args: tuple) -> None:
+    """Implement the algorithm on a specific image."""
+    picture_name: str = args[0]
+    radius: str = args[1]
 
     click.echo(f"Picture {picture_name} has accepted. ")
     click.echo(f"Search for circles with a radius of {radius} . . .")
-    path_to_save = f"./results/{picture_name}"
+    path_to_save: str = f"./results/{picture_name}"
     os.makedirs(path_to_save, exist_ok=True)
 
-    im1 = imageio.imread(f"images/{picture_name}")
-    hough1 = Hough_round(int(radius))
+    im1: np.ndarray = imageio.imread(f"images/{picture_name}")
+    hough1: Hough_round = Hough_round(int(radius))
     hough1.fit(im1)
     hough1.draw_circle()
 
     click.echo("The algorithm has completed.")
 
-    edge_image = view(hough1.edge)
-    coef_space_image = view(hough1.coef_space)
-    result_image = view(hough1.image)
+    edge_image: Image.Image = view(hough1.edge)
+    coef_space_image: Image.Image = view(hough1.coef_space)
+    result_image: Image.Image = view(hough1.image)
 
     edge_image.save(f"{path_to_save}/edges.jpg")
     coef_space_image.save(f"{path_to_save}/coef_space_{radius}.jpg")

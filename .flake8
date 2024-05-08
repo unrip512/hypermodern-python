@@ -1,8 +1,11 @@
 
 [flake8]
 
-select = BLK,C,E,F,S,W
+select = ANN,BLK,C,D,DAR,E,F,S,W
+docstrings-convention = google
 ignore = E203, W503
 max-complexity = 10
 max-line-length = 88
-per-file-ignores = tests/*:S101
+per-file-ignores =
+	tests/*:S101
+	
