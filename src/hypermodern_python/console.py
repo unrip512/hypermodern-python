@@ -23,14 +23,14 @@ def view(img: np.ndarray) -> Image.Image:
 class Hough_round:
     """Contain all the attributes and functions for implementing the Hough algorithm."""
 
-    image = None
-    edge = None
-    pattern = None
-    r = None
-    coef_space = None
-    res_circle_coord = None
+    image: np.ndarray
+    edge: np.ndarray
+    pattern: np.ndarray
+    r: int
+    coef_space: np.ndarray
+    res_circle_coord: np.ndarray
 
-    def __init__(self: "Hough_round", r: int) -> None:
+    def __init__(self, r: int) -> None:
         """Initialize an object of the class. Defines the radius of the desired circles.
 
         Args:
@@ -139,11 +139,19 @@ class Hough_round:
 
 @click.command()
 @click.version_option(version=__version__)
-@click.argument("args", nargs=2)
-def main(args: tuple) -> None:
-    """Implement the algorithm on a specific image."""
-    picture_name: str = args[0]
-    radius: str = args[1]
+@click.argument("picture_path_name", nargs=1)
+@click.argument("cir_radius", nargs=1)
+def main(picture_path_name: str, cir_radius: int) -> None:
+    """Find and draw circles of a given radius on the image.
+
+    Saves the image with the drawn found circles to the results folder.
+
+    Args:
+        picture_path_name: full path to the image.
+        cir_radius: radius of the circle in pixels.
+    """
+    picture_name: str = picture_path_name
+    radius: int = cir_radius
 
     click.echo(f"Picture {picture_name} has accepted. ")
     click.echo(f"Search for circles with a radius of {radius} . . .")

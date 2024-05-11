@@ -4,7 +4,7 @@ import nox
 import tempfile
 from nox.sessions import Session
 
-nox.options.sessions = "lint", "pytype", "tests"
+nox.options.sessions = "black", "lint", "pytype", "mypy", "tests"
 
 
 @nox.session(python=["3.8"])

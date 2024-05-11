@@ -3,7 +3,7 @@
 
 select = ANN,BLK,C,D,DAR,E,F,S,W
 docstrings-convention = google
-ignore = E203, W503
+ignore = E203, W503, ANN101
 max-complexity = 10
 max-line-length = 88
 per-file-ignores =
