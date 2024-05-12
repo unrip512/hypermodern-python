@@ -92,5 +92,5 @@ def typeguard(session: Session) -> None:
 def docs(session: Session) -> None:
     """Build the documentation."""
     session.run("poetry", "install", external=True)
-    session.install("sphinx", "sphinx-autodoc-typehints")
+    session.install("sphinx", "sphinx-autodoc-typehints", "sphinx-rtd-theme")
     session.run("poetry", "run", "sphinx-build", "docs", "docs/_build", external=True)

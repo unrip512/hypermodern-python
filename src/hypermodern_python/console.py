@@ -34,7 +34,7 @@ class Hough_round:
         """Initialize an object of the class. Defines the radius of the desired circles.
 
         Args:
-            r: the radius of the circles that we are looking for in the image.
+            r: the radius of the circles that we are looking for in the image.в
         """
         self.r = r
         self.pattern = self.make_circle_pattern(r)

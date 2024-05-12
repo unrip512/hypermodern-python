@@ -8,44 +8,41 @@ The Hypermodern Python Project
    reference
 
 
-The example project for the
-`Hypermodern Python <https://medium.com/@cjolowicz/hypermodern-python-d44485d9d769>`_
-article series.
-The command-line interface prints random facts to your console,
-using the `Wikipedia API <https://en.wikipedia.org/api/rest_v1/#/>`_.
+Hough transform for circles of known radius.
+
+Implemented based on a series of `Hypermoder Python <https://medium.com/@cjolowicz/hypermodern-python-d44485d9d769>`_
+articles.
 
 
 Installation
 ------------
 
-To install the Hypermodern Python project,
-run this command in your terminal:
+To install this project, copy the project repository to your device.
+
+Run this command in your terminal:
 
 .. code-block:: console
 
-   $ pip install hypermodern-python
+   $ git clone https://github.com/unrip512/hypermodern-python.git
 
 
 Usage
 -----
 
-Hypermodern Python's usage looks like:
+The algorithm allows you to find circles of a given radius in the image.
+
+Algorithm usage looks like:
 
 .. code-block:: console
 
-   $ hypermodern-python [OPTIONS]
+   $ poetry run hough_circle_transform [OPTIONS] PICTURE_PATH_NAME CIR_RADIUS
 
-.. option:: -l <language>, --language <language>
-
-   The Wikipedia language edition,
-   as identified by its subdomain on
-   `wikipedia.org <https://www.wikipedia.org/>`_.
-   By default, the English Wikipedia is selected.
-
-.. option:: --version
+--version
 
    Display the version and exit.
 
-.. option:: --help
+--help
 
    Display a short usage message and exit.
+
+	
